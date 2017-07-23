@@ -1,12 +1,55 @@
 {
-  "rules" : {
-    ".write" : "auth != null",
-    ".read" : "auth != null",
-    "users" : {
-      ".indexOn" : ["userInfo/facebookUid","friendsList/firebaseUid"],
-    },
+  "rules": {
+
     "allCharts" : {
         ".indexOn" : ["owner"],
-    }
+        ".write" : false,
+        ".read": "auth != null",
+    },
+    "facebookUidVsFirebaseUid" : {
+      "$faceUid" : {
+        ".write" : "newData.val()===auth.uid"
+      }
+    },
+    "users" : {
+      ".indexOn" : ["userInfo/facebookUid","friendsList/firebaseUid"],
+      "$uid" : {
+        "favorites" : {
+        },
+        "friendsCharts" : {
+          ".write" : false,
+        	".read": "auth != null",
+        },
+        "friendsList" : {
+          ".write" : "auth != null && auth.uid === $uid",
+          ".read": "auth != null && auth.uid === $uid",
+        },
+        "userCharts" : {
+          ".read": "auth != null && auth.uid === $uid",
+          ".write": "auth != null && auth.uid === $uid",
+          "$chartkey" : {
+            "TitleColor" : {},
+            "chartColor" : {},
+            "chartData" : {
+              ".write" : "!data.parent().child('voters').hasChild(auth.uid)"
+            },
+            "chartLabels" : {},
+            "chartTitle" : {},
+            "chartType" : {},
+            "createdAt" : {},
+            "loveCount" : {},
+            "owner" : {},
+            "titleColor" : {},
+            "voteCount" : {},
+            "voters" : {
+              }
+            }
+          },
+        "userInfo" : {
+        ".write" : "auth != null && auth.uid === $uid",
+        ".read": "auth != null",
+        }
+        },
+      }
   }
 }
