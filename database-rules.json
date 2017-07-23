@@ -1,0 +1,12 @@
+{
+  "rules" : {
+    ".write" : "auth != null",
+    ".read" : "auth != null",
+    "users" : {
+      ".indexOn" : ["userInfo/facebookUid","friendsList/firebaseUid"],
+    },
+    "allCharts" : {
+        ".indexOn" : ["owner"],
+    }
+  }
+}
